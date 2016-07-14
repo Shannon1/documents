@@ -1113,7 +1113,7 @@ MySQL复制大部分是向后兼容的，新版本可以作为老版本的备库
 2. 备库将主库上的日志复制到自己的中继日志（Relay Log）中。
 3. 备库读取中继日志中的事件，将其重放到备库数据库中。
 
-![主从复制](./1468306383602.png)
+![主从复制](https://github.com/Shannon1/documents/blob/master/image/repl.png)
 
 具体实现原理：
 1. slave 服务器上执行start slave，开启主从复制开关。
@@ -1237,10 +1237,10 @@ mysql>SHOW GLOBAL STATUS LIKE "rpl_semi%";
 ```
 
 master:
-![半同步复制Master](./1468307068977.png)
+![半同步复制Master](https://github.com/Shannon1/documents/blob/master/image/semi_master.png)
 
 slave:
-![半同步复制Slave](./1468307108091.png)
+![半同步复制Slave](https://github.com/Shannon1/documents/blob/master/image/semi_slave.png)
 
 ### 4.5.3参数说明
 - `rpl_semi_sync_master_enabled`，表示master启用半同步复制模式。
@@ -1321,7 +1321,7 @@ pt-table-checksum --replicate=test.checksum <master_host>
 ```
 mysql>show slave status;
 ```
-![Alt text](./1468307898740.png)
+![Alt text](https://github.com/Shannon1/documents/blob/master/image/repl_error.png)
 
  
 解决思路：
@@ -1404,7 +1404,7 @@ read-only=on
 
 ## 5.1 MySQL自带的Replication架构
 
-![Alt text](./1468307923318.png)
+![Alt text](https://github.com/Shannon1/documents/blob/master/image/replication.png)
 
 此架构比较简单但是对读多写少的数据库使用有非常好的性能，另外因为MySQL服务对双主模式的处理非常不好，不建议使用双主模式，master服务器如果主要处理写入数据的话，硬件资源相应充足情况下不会成为瓶颈，此集群的主要使用方法参考图进行分析。
 实现方法：
@@ -1421,7 +1421,7 @@ MMM主要功能由三个脚本提供：
 
 ### 5.2.1 工作逻辑图
 
-![MMM](./1468308023145.png)
+![MMM](https://github.com/Shannon1/documents/blob/master/image/mmm.png)
 
 ### 5.2.2	配置环境：
 
@@ -1610,7 +1610,7 @@ mmm_control checks all
 
 注：此架构还可以添加中间件进行读写分离的升级，此类中间件有Amoeba,Atlas.
 
-![MMM](./1468308308812.png)
+![MMM](https://github.com/Shannon1/documents/blob/master/image/mmm2.png)
 
 
 ## 5.3 MHA
@@ -1628,7 +1628,7 @@ MHA是一位日本MySQL大牛用Perl写的一套MySQL故障切换方案，来保
 
 ### 5.3.3 MHA 工作原理
 
-![MHA](./1468308396488.png)
+![MHA](https://github.com/Shannon1/documents/blob/master/image/mha.png)
 
 1. 从宕机崩溃的 Master 保存二进制日志事件（binlog event）； 
 2. 识别含有最新更新的 Slave； 
@@ -1658,7 +1658,7 @@ Node 工具包（通常由 MHA Manager 的脚本触发，无需人工操作）�
 
 ### 5.3.5 配置MHA
 
-![Alt text](./1468310790015.png)
+![Alt text](https://github.com/Shannon1/documents/blob/master/image/mha2.png)
 
 
 
@@ -1967,7 +1967,7 @@ DRBD已经被MySQL官方写入文档手册作为推荐的高可用的方案之�
 
 ### 5.4.2	架构图
 
-![Alt text](./1468310970315.png)
+![Alt text](https://github.com/Shannon1/documents/blob/master/image/hk.png)
 
 
 服务器划分：
