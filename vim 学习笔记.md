@@ -24,12 +24,12 @@
 
 [一起来说 Vim 语](http://www.jianshu.com/p/a361ce8c97bc)
 
-`cw` Change Word 
-`db` Delete word Begin
-`de` Delete word End // begin 和 end 都是对单词(word)而言的
-`dw` Delete Word
-`daw` Delete A Word //其实是Delete Around Word，不过delete a word更好记
-`d{n}w` Delete n Words // n是数字
+`cw` Change Word  
+`db` Delete word Begin  
+`de` Delete word End // begin 和 end 都是对单词(word)而言的  
+`dw` Delete Word  
+`daw` Delete A Word //其实是Delete Around Word，不过delete a word更好记  
+`d{n}w` Delete n Words // n是数字  
 
 **操作符 + 动作命令 = 操作**
 *动作命令*决定作用范围
