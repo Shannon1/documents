@@ -20,7 +20,7 @@
 
 `*` **查找光标所在的单词** 高频
 
-[vim语](https://app.yinxiang.com/shard/s34/nl/7629649/3f100815-3273-407b-8122-0c3698319e64)
+~~[vim语](https://app.yinxiang.com/shard/s34/nl/7629649/3f100815-3273-407b-8122-0c3698319e64)~~
 
 [一起来说 Vim 语](http://www.jianshu.com/p/a361ce8c97bc)
 
