@@ -138,9 +138,9 @@ pid-file = MYSQL_HOME/mysql.pid	#pid文件,文件记录了mysql的进程id
 log-bin = MYSQL_HOME/mysql-bin 	#binlog文件
 relay-log = MYSQL_HOME/relay-bin 	#relay-log
 relay-log-info-file = MYSQL_HOME/relay-log.info
-binlog_cache_size = 1M #为每一个client分配的一次事务的binlog的缓存大小,session级别
-max_binlog_cache_size = 1M
-max_binlog_size = 2M #单个binlog文件的最大大小,超过这个值会建立新的binlog文件,文件id递增
+binlog_cache_size = 1M #为每一个client分配的一次事务的binlog的缓存大小,session级别, 如果经常出现多语句事务, 可以考虑增加该值的大小
+max_binlog_cache_size = 1M #和binlog_cache_size对应, binlog所能使用的最大cache内存大小, 当我们执行多语句事务的时候，max_binlog_cache_size 如果不够大的话，系统可能会报出“ Multi-statement transaction required more than 'max_binlog_cache_size' bytes ofstorage”的错误。
+max_binlog_size = 2M #单个binlog文件的最大大小,超过这个值会建立新的binlog文件,文件id递增; 一般不要超过1G
 expire_logs_days = 7 #binlog过期时间 / 天
 key_buffer_size = 16M	#myisam索引buffer,只有key没有data
 read_buffer_size = 1M 	#以全表扫描(Sequential Scan)方式扫描数据的buffer大小 ；线程级别  
@@ -198,8 +198,9 @@ pid-file=/application/mysql/mysqld.pid
 上面说到的「最后 1s」并不是绝对的，有的时候会丢失更多数据。有时候由于调度的问题，每秒刷写（once-per-second flushing）并不能保证 100% 执行。对于一些数据一致性和完整性要求不高的应用，配置为 2 就足够了；如果为了最高性能，可以设置为 0。有些应用，如支付服务，对一致性和完整性要求很高，所以即使最慢，也最好设置为 1.
 
 `sync_binlog` 是MySQL的二进制日志（binary log）同步到磁盘的频率。MySQL server在binary log每写入 `sync_binlog` 次后，刷写到磁盘。
-如果autocommit开启，每个语句都写一次binary log，否则每次事务写一次。默认值是 0，不主动同步，而依赖操作系统本身不定期把文件内容flush到磁盘。设为1最安全，在每个语句或事务后同步一次binary log，即使在崩溃时也最多丢失一个语句或事务的日志，但因此也最慢。
+如果autocommit开启，每个语句都写一次binary log，否则每次事务写一次。可选值0或n(n>0)。默认值是0，不主动同步，而依赖操作系统本身不定期把文件内容flush到磁盘。设为1最安全，在每个语句或事务后同步一次binary log，即使在崩溃时也最多丢失一个语句或事务的日志，但因此也最慢。
 大多数情况下，对数据的一致性并没有很严格的要求，所以并不会把 `sync_binlog` 配置成1. 为了追求高并发，提升性能，可以设置为100或直接用0.而和 `innodb_flush_log_at_trx_commit` 一样，对于支付服务这样的应用，还是比较推荐 `sync_binlog = 1`.
+对于高并发事务的系统来讲, `sync_binlog`设置为0或1,可以产生五倍甚至更多的写入性能差距.
 
 
 ### 1.1.9 MySQL启动脚本
