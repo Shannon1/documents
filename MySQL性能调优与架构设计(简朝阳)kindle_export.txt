@@ -1,0 +1,278 @@
+索引顺序存取数据的方法，也就是ISAM（Indexed Sequential Access Method）
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 396-397
+
+
+不过偶尔也有超出该设置的binlog产生，一般都是因为在即将达到上限时，会产生一个较大的事务，为了保证事务安全，MySQL不会将同一个事务分开记录到两个binlog中。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 518-520
+
+
+由于记录了所有的Query，包括所有的select，体积比较大，开启后对性能也有较大的影响，所以请大家慎用该功能。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 532-533
+
+
+可以不通过TCP/IP网络而直接使用Unix Socket来连接MySQL。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 587-587
+
+
+出于性能考虑，我们一般很少打开Full Query Logging的功能。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 663-663
+
+
+Maria是MySQL最新开发（还没有发布最终的GA版本）的MyISAM的升级版存储引擎，
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 807-808
+
+
+Maria是MySQL最新开发（还没有发布最终的GA版本）的MyISAM的升级版存储引擎，Falcon是MySQL公司自行研发的替代当前InnoDB存储引擎的一款带有事务等高级特性的数据库存储引擎，目前正在研发阶段。Memory存储引擎的所有数据和索引均存储于内存中，所以主要是用于一些临时表，或者对性能要求极高，但是允许在系统崩溃（crash）的时候丢失数据的特定场合。Archive是一个数据经过高比例压缩存放的存储引擎，主要用于存放过期而且很少访问的历史信息，不支持索引。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 807-811
+
+
+存放表结构定义信息的.frm文件，
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 816-816
+
+
+表的数据（.MYD）和索引数据（.MYI）。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 816-817
+
+
+主要是为了解决当须要用like查询时的低效问题。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 823-824
+
+
+只要表中有可变长度类型的字段存在，该表就肯定是DYNAMIC格式的，
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 830-830
+
+
+所以大家强行转换时一定要谨慎。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 833-833
+
+
+InnoDB的表空间分为两种形式。一种是共享表空间，也就是所有表数据、索引数据、各种元数据及事务的UNDO数据都被存放在同一个表空间（一个或多个数据文件）中，通过innodb_data_file_path来指定，增加数据文件须要停机重启。另外一种是独享表空间，也就是每个表的数据和索引被存放在一个单独的.ibd文件中，该文件包括每个表的表数据、索引数据及该表相关的事务UNDO数据。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 862-866
+
+
+建议大家最好加上最大尺寸的属性，
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 869-869
+
+
+也就是说备份数据很可能不是同一个时间点的数据，而且甚至可能都没办法满足完整性约束。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1286-1287
+
+
+周期性地进行模拟恢复测试，校验备份集是否真的有效，是否确实能够按照备份的预期进行相应的恢复。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1357-1358
+
+
+做恢复测试只是为了验证备份是否有效，是否能达到预期。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1359-1360
+
+
+数据库的物理对象主要由数据库的物理数据文件、日志文件及配置文件等组成。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1394-1394
+
+
+的。“.ibd”文件中所存放的仅仅只是表数据、索引数据以及UNDO信息，
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1416-1417
+
+
+表的元数据信息都是存放在“innodb_data_home_dir”和“innodb_data_file_path”这两个参数所设定的数据文件中的。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1418-1419
+
+
+InnoDB还存放REDO信息和相关事务信息的日志文件在“innodb_log_group_home_dir”参数所设定的位置。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1420-1421
+
+
+元数据（Metadata）：包含所有的数据库及表的定义信息； ●　表数据（Table Records）：保存实际数据的文件； ●　事务日志数据（Transaction Log）：维持事务的一致性和完整性，以及恢复过程中需要的事务信息。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1424-1426
+
+
+如果要做冷备份（停掉数据库之后的备份），要做的事情很简单，那就是直接复制所有数据文件和日志文件到备份集存放的位置即可，不管是何种存储引擎都可以这样做。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1431-1432
+
+
+（1）对于较为核心的在线应用系统，必须有在线备用主机通过MySQL的复制进行相应的备份，复制线程可以一直开启，恢复线程可以每天恢复一次，尽量让备机的数据延后主机的时间在一定时间段之内。这个延后时间多长合适主要根据实际需求决定，一般来说延后一天是一个比较常规的做法。 （2）对于重要级别稍微低一些的应用，恢复时间要求不是太高的话，为了节约硬件成本，不必使用在线的备份主机来单独运行备用MySQL，可以通过一定的时间周期进行一次物理全备份，同时每小时（或者其他合适的时间段）都将产生的二进制日志进行备份。这样虽然没有第一种备份方法恢复快，但是数据的丢失会比较少。恢复所需要的时间由全备周期长短决定。 （3）对于恢复基本没有太多时间要求，但是不希望太多数据丢失的应用场景，则可以在一定时间周期内进行一次逻辑全备份，同时也备份相应的二进制日志。使用逻辑备份而不使用物理备份的原因是因为逻辑备份实现简单，可以完全在线联机完成，备份过程不会影响应用提供服务。 （4）对于一些搭建临时数据库的备份应用场景，仅仅须要通过一个逻辑全备份即可满足需求，都不须要用二进制日志来进行恢复，因为这样的需求对数据并没有太苛刻的要求。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1516-1526
+
+
+MySQL在实际应用场景中大多有一台或多台Slave机器来作为热备。在须要的时候通过Slave来进行备份也不是太难，通过暂时停止Slave上面的SQL线程，即可让Slave机器停止所有数据写入操作，然后就可以在线进行备份操作了。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1534-1536
+
+
+当MySQL Server的连接线程接收到Client端发送过来的Query请求时，会经过一系列的分解Parse，并进行相应的分析。然后，MySQL会通过查询优化器模块（Optimizer）根据该Query所涉及的数据表相关统计信息进行计算分析，再得出一个MySQL认为最合理最优化的数据访问方式，也就是常说的“执行计划”，然后根据所得到的执行计划通过调用存储引擎借口来获取相应数据。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1750-1754
+
+
+我们都知道，在数据库管理软件中，最大的性能瓶颈就是在于磁盘IO，也就是数据的存取操作上面。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1757-1758
+
+
+当须要从数据库中查询某个数据的时候，所消耗资源的多少主要取决于数据库以一个什么样的数据读取方式来完成查询请求，也就是取决于Query语句的执行计划。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1760-1761
+
+
+需求和架构及业务实现优化：55％ Query语句的优化：30％ 数据库自身的优化：15％
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1907-1908
+
+
+商业需求合理化，系统架构最优化，逻辑实现精简化，硬件设施理性化。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1912-1913
+
+
+页级锁定的特点是锁定颗粒度介于行级锁定与表级锁之间，所以获取锁定所需要的资源开销，以及所能提供的并发处理能力同样也介于上面二者之间。另外，页级锁定和行级锁定一样，会发生死锁。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1936-1938
+
+
+在MySQL数据库中，使用表级锁定的主要是MyISAM、Memory、CSV等一些非事务性存储引擎，而使用行级锁定的主要是InnoDB存储引擎和NDB Cluster存储引擎，页级锁定主要是BerkeleyDB存储引擎的锁定方式。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1941-1943
+
+
+一个新的客户端请求在申请获取读锁定资源的时候，需要满足两个条件： （1）请求锁定的资源当前没有被写锁定； （2）写锁定等待队列（Pending write-lock queue）中没有更高优先级的写锁定在等待。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 1969-1971
+
+
+无论对于哪一种数据库，缓存技术都是提高数据库性能的关键，物理磁盘的访问速度与内存的访问速度永远都不是一个数量级的。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3454-3455
+
+
+虽然InnoDB存储引擎默认的事务隔离级别是REPEATABLE READ，但实际上在大部分应用场景下，只需要READ COMMITED的事务隔离级别就可以满足需求了。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3553-3554
+
+
+InnoDB在修改数据的时候也只是修改Buffer Pool中的数据，并不是在一个事务提交的时候就将BufferPool中被修改的数据同步到磁盘，而是通过另外一种支持事务的数据库系统常用的手段，将修改信息记录到相应的事务日志中。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3558-3560
+
+
+一般来说，在个人维护的环境中，比较偏向于将事务日志设置为3组，每个日志设置为256MB，整体效果还算不错。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3593-3594
+
+
+innodb_flush_log_at_trx_commit。这个参数的主要功能就是告诉系统，在什么情况下该通知文件系统刷新缓存中的数据到磁盘文件，可设置为如下三种值： ●　innodb_flush_log_at_trx_commit = 0，InnoDB中的Log Thread每隔1秒钟会将log buffer中的数据写入文件，同时还会通知文件系统进行与文件同步的flush操作，保证数据确实已经写入磁盘。但是，每次事务的结束（COMMIT或是ROLLBACK）并不会触发Log Thread将Log Buffer中的数据写入文件。所以，当设置为0时，在MySQL Crash和OS Crash或主机断电之后，最极端的情况是丢失1秒的数据变更。 ●　innodb_flush_log_at_trx_commit = 1，这也是InnoDB的默认设置。每次事务的结束都会触发Log Thread将log buffer中的数据写入文件、并通知文件系统同步文件。这个设置是最安全的，能够保证不论是MySQL Crash、OS Crash还是主机断电都不会丢失任何已经提交的数据。 ●　innodb_flush_log_at_trx_commit = 2，当设置为2的时候，Log Thread会在每次事务结束的时候将数据写入事务日志，仅仅是调用了文件系统的文件写入操作。而文件系统都是有缓存机制的，所以Log Thread的写入并不能保证内容已经写入到物理磁盘完成持久化的动作。文件系统什么时候会将缓存中的数据同步到物理磁盘、文件，Log Thread就完全不知道了。所以，当设置为2的时候，MySQL Crash并不会造成数据的丢失，但是OS Crash或主机断电后可能丢失的数据量就完全控制在文件系统上了。各种文件系统对于缓存的刷新机制各不相同，
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3599-3610
+
+
+一般来说，如果完全不能接受数据的丢失，那么可以通过牺牲一定的性能来换取数据的安全性，选择设置为1。如果可以丢失很少量的数据（比如说1秒之内），那么可以设置为0。当然，如果OS足够稳定，主机硬件设备足够好，而且主机的供电系统也足够安全，可以将innodb_flush_log_at_trx_commit设置为2，让系统的整体性能尽可能地高。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3614-3617
+
+
+innodb_log_buffer_size设置的大小。一般来说，如果不是特别高的事务并发度或系统中都是大事务，8MB的内存空间已经完全够用了。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3623-3624
+
+
+由于主键是聚簇索引的，InnoDB基于主键的查询效率非常高。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3630-3630
+
+
+如果没有任何单个not null属性列的唯一索引，InnoDB会自动生成一个隐藏的内部列，该列会在每行数据上占用6个字节的存储长度。所以，实质上每个InnoDB表都至少会有一个索引存在。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3632-3633
+
+
+为了性能考虑，尽可能不要更新InnoDB的主键值。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3637-3638
+
+
+都以page作为最小物理单位来存放，
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3639-3639
+
+
+每个extent为64个page。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3641-3641
+
+
+每个表数据会存放于一个单独的segment中，实际上也就是每个聚簇索引会存放于一个单独的segment中。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3642-3643
+
+
+tablespace是InnoDB中最大物理结构单位，由多个segment组成。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3644-3644
+
+
+（1）为了尽量减小secondary index的大小，提高访问效率，作为主键的字段所占用的存储空间越小越好，最好是INTEGER类型。当然这并不是绝对的，字符串类型的数据同样可以作为Innodb表的主键。 （2）创建表的时候尽量自己指定相应的主键，让数据按照预设的顺序排序存放，以提高特定条件下的访问效率。 （3）尽可能不要在主键上进行更新操作，减少因为主键值的变化带来数据的移动。 （4）尽可能提供主键条件进行查询。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3655-3659
+
+
+innodb_thread_concurrency
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3680-3680
+
+
+建议将Innodb设置为CPU个数与磁盘个数之和。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3681-3682
+
+
+SHOW INNODB STATUS”
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 3697-3697
+
+Notes: 1) show engine innodb status 
+
+
+通过mysqldump客户端程序导出逻辑数据序。 如果数据库不能停机进行冷备份，而且MySQL也没有运行在可以进行Snapshot的文件系统或管理软件之上，那么就要通过mysqldump工具将Master端需要复制的数据库（或者表）的数据dump出来。为了让备份集具有一致性和完整性，我们必须确保dump数据的这个过程处于同一个事务中，或者锁住所有需要复制的表的写操作。如果所使用的是支持事务的存储引擎（如InnoDB），可以在执行mysqldump程序的时候通过添加—single-transaction选项，但是如果存储引擎并不支持事务，或者须要dump的表只有部分支持事务时，就只能先通过FLUSH TABLES WITH READ LOCK命令来暂停所有写入服务，然后再dump数据了。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 4069-4075
+
+
+给mysqldump程序增加了另外一个参数选项来帮助获取到对应的Log Position，这个参数选项就是—master-data。在添加这个参数选项之后，mysqldump会在dump文件中产生一条CHANGE MASTER TO命令，命令中记录了dump时刻所对应的详细的Log Position信息。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 4078-4080
+
+
+添加—single- transaction选项来保证数据的一致性和完整性。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 4085-4086
+
+
+可以暂时性地停掉现有Slave（如果有多台则仅仅需要停止其中的一台），同时执行一次FLUSH TABLES命令来刷新所有表和索引的数据。这时候在该Slave上面就不会再有任何的写入操作了，既可以通过拷贝所有的数据文件和日志文件来做一个全备份，也可以通过Snapshot（如果支持）来进行备份。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 4088-4091
+
+
+
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 4122-4122
+
+
+可以根据Slave上面的Relay Log中的时间戳信息与Master A中的时间戳信息进行对照来找到准确的复制起始点，不会造成任何的数据丢失。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 4944-4945
+
+
+
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 5161-5161
+
+
+mysqld进程Crash之后，mysqld_safe会马上重启mysqld进程。但前提是必须通过mysqld_safe来启动MySQL Server，这也是MySQL AB强烈推荐的做法。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 5176-5178
+
+
+ps -ef | grep "mysqld_safe" | grep -v "grep"和ps -ef | grep "mysqld" | grep -v "mysqld_safe"| grep -v "grep"
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 5179-5180
+
+
+load值在不超过系统物理CPU数目（或者CPU总核数）之前，系统不会有太大问题。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 5200-5201
+
+
+CPU使用率可以通过多种方法来获取，最为常用的方法是使用命令top和vmstat来获取。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 5203-5204
+
+
+磁盘IO量同样也可以通过vmstat来获取，当然，还可以通过iostat来获得更为详细的系统IO信息。包括各个磁盘设备的iops、每秒吞吐量等。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 5207-5208
+
+
+获得实时的swap使用变化，还是得依赖vmstat来得到。vmstat输出信息中包含了每秒swap的进出量，
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 5213-5214
+
+
+且90％以上的内容可以在连接上MySQL Server后执行“SHOW /*!50000 GLOBAL */ STATUS”及“SHOW /*!50000 GLOBAL */ VARIABLES”的输出值获得。须要注意的是上述命令所获得的状态值实际上是累计值，所以如果要计算（单位/某个）时间段内的变化量还须要稍加处理，
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 5222-5224
+
+
+下面看看几项须要重点关注的性能状态： ●　QPS（每秒Query量）：这里的QPS实际上是指MySQL Server每秒执行的Query总量，在MySQL 5.1.30及旧的版本可以通过Questions状态值每秒内的变化量来近似表示，而从MySQL 5.1.31开始，则可以用Queries来表示。Queries是在MySQL 5.1.31才新增的状态变量。Questions状态变量没有记录存储过程中所执行的Query量（当然，在无存储过程的老版本MySQL中则不存在这个区别），而Queries状态变量则会记录。二者获取方式如以下代码所示： 这里的Seconds是指累计出上述两个状态变量值的时间区间（若干秒），后面用到的地方也代表同样的意思。 ●　TPS（每秒事务量）：在MySQL Server中并没有直接事务计数器，只能通过回滚和提交计数器来计算出系统的事务量。所以，须要通过以下方式来得到客户端应用程序所请求的TPS值： 如果我们还使用了分布式事务，那么还要将Com_xa_commit和Com_xa_rollback两个状态变量的值加上。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 5224-5233
+
+
+Innodb Buffer命中率：这里Innodb Buffer所指的是innodb_buffer_pool，也就是用来缓存Innodb类型表的数据和索引的内存空间。类似Key buffer，同样可以根据MySQL Server提供的相应状态值用如下方式计算出其命中率： 获取所需状态变量值如示例代码18-4所示： 代码18-4 ●　Query Cache命中率：如果使用了Query Cache，那么对Query Cache命中率进行监控也是有必要的，因为它可能告诉我们是否在正确地使用Query Cache。Query Cache命中率的计算方式如下： 获取所需状态变量值如示例代码18-5所示： 代码18-5 ●　Table Cache状态量：Table Cache的当前状态量值可以帮助我们判断系统参数table_open_cache的设置是否合理。如果状态变量Open_tables与Opened_tables之间的比值过低，则代表Table Cache设置过小，个人认为该值为80％左右比较合适。注意，这个值并不是准确的Table Cache命中率。 获取所需状态变量值如示例代码18-6所示： 代码18-6 ●　Thread Cache命中率：Thread Cache命中率能够直接反映出系统参数thread_cache_ size设置的是否合理。一个合理的thread_cache_size参数能够节约大量创建新连接时所要消耗的资源。Thread Cache命中率计算方式如下： 获取所需状态变量值如示例代码18-7所示： 代码18-7 正常的情况下，Thread Cache命中率要在90％以上才算比较合理。 ●　锁定状态：锁定状态包括表锁和行锁两种，可以通过系统状态变量获得锁定总次数、锁定造成其他线程等待的次数，以及锁定等待时间信息，如示例代码18-8所示。 代码18-8 通过示例代码18-8所示系统变量，我们可以得出表锁总次数，其中包括造成其他线程等待的次数。同时还可以得到非常详细的行锁信息，如行锁总次数、行锁总时间、每次行锁等待时间、行锁造成最大等待时间，以及当前等待行锁的线程数。通过对这些量的监控，可以清晰地了解到系统整体的锁定是否严重。如当Table_locks_waited与Table_locks_immediate的比值较大时，说明表锁造成的阻塞比较严重，可能要调整Query语句，或者更改存储引擎，抑或要调整业务逻辑。当然，具体改善方式必须根据实际场景来判断。而Innodb_row_lock_waits较大，则说明Innodb的行锁也比较严重，且影响了其他线程的正常处理。同样须要查找出原因并解决。造成Innodb行锁严重的原因可能是Query语句所用的索引不够合理（Innodb行锁是基于索引来锁定的），造成间隙锁过大。也可能是系统本身处理能力有限，这要从其他方面（如硬件设备）来分析解决。 ●　复制延时量：复制延时量将直接影响Slave数据库Master处于不一致状态的时间长短。如果通过Slave节点来提供读服务，就不得不重视这个延时量。我们可以通过在Slave节点上执行“SHOW SLAVE STATUS”命令，取Seconds_Behind_Master项的值来了解Slave节点当前的延时量（单位：秒）。当然，该值的准确性依赖于复制是否处于正常状态。每个环境下的Slave节点所允许的延时长短与具体环境有关，所以复制延时多长时间是合理的，只能由读者根据各自实际的应用环境来判断。 ●　Tmp table状况：Tmp Table的状况主要是用于监控MySQL使用临时表的量是否过多，是否有临时表过大而不得不从内存中换出到磁盘文件上。临时表使用状态信息可以通过示例代码18-9所示的方式获得。 代码18-9 从示例代码18-9所示的状态信息可以了解到系统使用了46次临时表，其中有1次临时表比较大，无法在内存中完成，而不得不使用到磁盘文件。如果Created_tmp_tables非常大，则可能是系统中排序操作过多，或者是表连接方式不太优化。而如果是 Created_tmp_disk_tables与Created_tmp_tables的比率过高，如超过10％，则要考虑tmp_table_size这个系统参数是否设置得足够大。当然，如果系统内存有限，也就没有更好的解决办法了。 ●　Binlog Cache使用状况：Binlog Cache用于存放还未写入磁盘的Binlog信息。相关状态变量如示例代码18-10所示： 代码18-10 如果Binlog_cache_disk_use值不为0，则说明Binlog Cache大小可能不够，建议增大binlog_cache_size系统参数。 ●　Innodb_log_waits量：Innodb_log_waits状态变量直接反映出Innodb Log Buffer空间不足造成等待的次数，如示例代码18-11所示。 代码18-11 该变量值发生的频率将直接影响系统的写入性能，所以当该值达到每秒1次时就应增加系统参数innodb_log_buffer_size的值，毕竟这是一个系统共用的缓存，适当增加并不会造成内存不足的问题。 上面这些监控量只是笔者个人认为比较重要的一些MySQL性能监控量，读者还可以根据各自的需要，通过MySQL所提供的系统状态变量增加其他监控内容。
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 5240-5287
+
+
+附录B　MySQL部分系统参数说明及设置建议 autocommit session级别，可动态更改 控制MySQL是否在每次执行DML之后自动commit，默认开启自动提交功能，也就是值为1。 auto_increment_increment session/global级别，可动态更改 设置自增序列的增长步长，也就是每次增加的数目，默认每次增长步长为1。 auto_increment_offset session/global级别，可动态更改 设置自增序列的起始位置，默认从1开始。 automatic_sp_privileges global级别，可动态更改 控制procedure和function的创建者在创建之后是否自动赋予执行、修改和删除的权限。默认为1，即自动赋予上述权限，若设置为0，则不会自动赋予上述权限。 back_log global级别，不可动态更改 设置MySQL最多能够handle的等待处理连接数量。当MySQL来不及处理瞬间大量的连接请求时，会先将这些连接请求放入一个临时网络堆栈中。back_log值就是这个临时堆栈的大小。OS级别在这个队列上也有它自己的限制，设置高于系统限制将不会有效果。在“show processlist”信息展示中，所有在临时堆栈进程中user栏里显示的都是“unauthenticated user”，而其Command栏目显示的肯定全部都是“Connect”，也就是说该进程所执行的命令类型是“请求连接”，State栏目显示的都是“login”状态。此参数默认为50。 binlog_cache_size global级别，可动态变更 设置MySQL二进制日志（Binary Log）的缓冲区大小，该缓冲区用于存放将要被写入Binary Log的SQL语句及事务相关信息。默认为32KB，一般环境建议设置为2MB。该缓冲区是每个连接线程独享的，所以设置太大可能会造成内存占用过多。当缓冲区不够的时候，MySQL将会暂时将缓冲数据写入磁盘临时空间，可以通过Binlog_cache_disk_use状态变量判断是否有写入磁盘的Binary Log缓冲信息。 binlog-format（5.1起） session/global级别，可动态变更 设置二进制日志（Binary Log）的记录格式，有ROW、STATEMENT、MIXED三个选项，除了5.1.12至5.1.28之间的版本默认设置为MIXED，其他版本默认值都为STATEMENT。每个选项代表含义如下。 ROW：以实际改变的ROW为记录单位，每条被更改的ROW都被单独记录为一个变更事件（Event）。对于一次变更多条数据的客户端请求，将会被记录成多个变更事件； STATEMENT：以客户端发送的SQL语句为记录单位，每个SQL语句被记录成一个变更事件； MIXED：除了认为通过STATEMENT方式可能造成复制过程中Master与Slave之间产生不一致数据（如特殊Procedure和Function的使用，UUID()函数的使用等特殊情况）的时候，MySQL会选择ROW的模式来记录变更之外，都会使用STATEMENT模式来记录变更。MIXED模式从5.1.8版本才开始支持。 bulk_insert_buffer_size session/global级别，可动态变更 针对于MyISAM存储引擎中bulk insert操作时候所使用的缓冲区，主要用于INSERT...SELECT、INSERT...VALUES()、()...及LOAD DATA INFILE之类的操作，默认为8MB，最大4GB。 completion_type session/global级别，可动态变更 控制事务结束类型，允许0、1和2（默认为0）。 0：COMMIT和ROLLBACK正常不受影响； 1：COMMIT和ROLLBACK分别等同于COMMIT AND CHAIN和ROLLBACK AND CHAIN。（新事务用于刚刚结束的事务相同的间隔等级立即启动）； 2：COMMIT和ROLLBACK分别等同于COMMIT RELEASE和ROLLBACK RELEASE。(事务终止后，服务器断开）。 concurrent_insert global级别，可动态变更 控制是否允许MyISAM表SELECT操作与INSERT操作不互相锁定。存在0、1和2三种设置（默认为1）。 0：不允许； 1：当数据文件中不存在因为删除操作产生空余空间时允许二者并行； 2：不论是否有空余空间，均插入数据文件尾部，且允许SELECT操作与INSERT操作不互相锁定。 delay_key_write global级别，可动态变更 控制是否允许MyISAM索引数据延迟刷新硬盘。允许延迟写入的意思是指索引被更新后，如果不使用FLUSH TABLE命令索引缓存信息在TABLE被close之前不会自动刷新到磁盘中。如果开启该功能，则须打开MySQL启动时自动检测的所有MyISAM表的功能（设置--myisam-recover）。可设置为OFF、ON（默认）和ALL，区别如下。 OFF：禁用延迟写入； ON：允许在创建时明确指定DELAY_KEY_WRITE参数的延迟写入和表的索引延迟写入； ALL：所有MyISAM表的索引均延迟写入。 delayed_insert_limit global级别，可动态设置 设置使用INSERT DELAYED命令一次批处理插入的记录数量。当达到参数设置量大小时，MySQL会检测是否有正在处于等待的SELECT，如果存在，则会允许该SELECT语句先执行结束，然后再继续后面的INSERT DELAYED操作。可设置范围是1至4GB，默认100。 delayed_insert_timeout global级别，可动态变更 设置一个INSERT DELAYED语句等待INSERT的最大时间长度。默认300秒。 delayed_queue_size global级别，可动态变更 设置为INSERT DELAYED操作预分配一个多少行记录的队列。在该队列占满之后，必须等待MySQL处理完所插入的数据之后才能接受新的INSERT DELAYED插入。设置范围1至4GB，默认1000。 div_precision_increment session/global级别，可动态设置 控制“/”操作符运算能够增加的有效位数。设置范围0至30，默认4。 event_scheduler（5.1.6起） global级别，可部分动态变更 控制MySQL定时任务管理器的开关以及禁用。可设置为ON、OFF或DISABLED，默认为OFF。 ON：定时任务管理器线程正常运行； OFF：定时任务管理器线程停止运行； DISABLED：禁用定时任务功能（仅MySQL启动是可设置）。 expire_logs_days global级别，可动态变更 设置二进制日志过期自动移出的时间期限时，当到达设定的最大保留期限，MySQL会自动删除过期的二进制日志。设置范围0至99，默认为0，即永不过期。 flush global级别，可动态变更 控制MySQL是否在每条SQL语句执行之后都进行磁盘刷新操作，默认关闭该功能。 flush_time global级别，可动态变更 设置MySQL每个参数长度秒数进行一次FLUSH TABLES操作，关闭所有Table，强行刷新缓冲区数据到磁盘，释放系统资源。设置范围0至1800，默认为0（不刷新）。 ft_boolean_syntax global级别，可动态变更 使用IN BOOLEAN MODE执行的布尔全文搜索支持的操作符系列。 ft_max_word_len global级别，不可动态变更 全文索引最大单词长度，最小为10，无上限。 ft_min_word_len global级别，不可动态变更 全文索引最小单词长度，最小为1，默认为4。 ft_query_expansion_limit global级别，不可动态变更 使用WITH QUERY EXPANSION进行全文搜索的最大匹配数。设置范围0至1000，默认20。 ft_stopword_file global级别，不可动态变更 用于读取全文搜索的停止字清单的文件。默认为myisam/ft_static.c。 general_log（5.1.12起） global级别，可动态变更 设置是否记录MySQL中执行的所有Query，可设置为ON（1）或者OFF（0），默认为OFF。 general_log_file（5.1.12起） global级别，可动态变更 设置记录MySQL中执行的所有Query的日志文件名（在使用文件记录的方式时），默认为hostname.log。 group_concat_max_len session/global级别，可动态变更 允许的GROUP_CONCAT()函数结果的最大长度，默认1024，最小4，无上明确设置上限。 init_connect global级别，可动态变更 设置MySQL在每个连接连上来之后执行任何请求之前自动执行的SQL语句，如： SET GLOBAL init_connect='SET AUTOCOMMIT=0'; init_file global级别，不可动态变更 设置服务器启动之后自动运行的SQL脚本文件，如设置多个Key Buffer，预加载某个MyISAM表的索引进入Key Buffer等操作都可以在init_file中设置。 init_slave global级别，可动态变更 类似于init_connect，设置在Slave端的SQL线程每次启动之前被执行的SQL。 innodb_adaptive_hash_index（5.1.24之后） global级别，不可变更 控制Innodb是否会在内存中自动为某些索引Build Hash表加速索引的查找。 innodb_additional_mem_pool_size global级别，不可动态变更 设置Innodb存放数据库字典信息的Buffer大小。一般应用建议设置为8MB至16MB（除非表数量非常大），默认1MB。 innodb_autoextend_increment global级别，可动态变更 控制Innodb的自动扩展表空间每次空间扩展的大小，单位为MB，默认为8MB。 innodb_buffer_pool_size global级别，不可动态变更 设置Innodb数据和索引内存缓存空间大小。 innodb_checksums global级别，不可动态变更 设置Innodb从磁盘读取数据快的时候是否进行checksum校验。默认为ON，可在启动设置为OFF。 innodb_commit_concurrency global级别，可动态变更 设置Innodb在同一时刻可以进行事务提交操作的并发数目，默认为0，即不做任何限制。 innodb_concurrency_tickets global级别，可动态变更 控制一个并发线程在Innodb并发控制允许的情况下，能够自由进行处理的次数，一旦处理次数用完，该线程必须再次重新申请新的free tickets。默认为500。 innodb_doublewrite global级别，不可动态变更 设置是否开启Innodb做checkpoint时Buffer刷新的double write机制，默认为开启。 innodb_fast_shutdown global级别，可动态变更 设置MySQL Server在关闭的时候处理Innodb存储引擎的方式，是直接快速中断所有线程，还是等待相关事情处理结束后再关闭。可设置为0、1和2。 0：最安全的关闭方式，会将缓存中的所有信息全部刷新到磁盘，且合并所有多版本数据信息，然后才会关闭； 1：Innodb在关闭之前不会进行任何刷新操作； 2：在关闭之前会刷新Log信息到磁盘，保证不会丢失事务。 innodb_file_io_threads global级别，不可动态变更 Innodb并发的IO处理线程数目，在Linux／Unix平台下，Innodb不会使用该参数设置的值而全部使用默认的4，Windows平台下可适当加大该参数值。 innodb_file_per_table global级别，不可动态变更 设置Innodb是每个表一个独享表空间存储还是所有表存放在一起使用共享表空间。 innodb_flush_log_at_trx_commit global级别，可动态变更 主要是针对innodb的“redo”从log buffer到log file的同步而设置的，可以设置的值有0、1、2这三个，默认为1。 0：log buffer中的数据将以每秒一次的频率写入到log file中，且同时会进行文件系统到磁盘的同步操作，但是每个事务的commit并不会触发任何log buffer到log file的刷新或者文件系统到磁盘的刷新操作； 1：在每次事务提交的时候将log buffer中的数据都会写入到log file，同时也会触发文件系统到磁盘的同步； 2：事务提交会触发log buffer到log file的刷新，但并不会触发磁盘文件系统到磁盘的同步。此外，每秒会有一次文件系统到磁盘同步操作。 注：MySQL文档中提到，上面几种设置中的每秒同步一次的机制，可能并不会完全确保非常准确的每秒就一定会发生同步，还取决于进程调度的问题。实际上，InnoDB能否真正满足此参数所设置值代表的意义正常Recovery还是受到了不同OS下文件系统以及磁盘本身的限制，可能有些时候在并没有真正完成磁盘同步的情况下也会告诉mysqld已经完成了磁盘同步。 innodb_flush_method global级别，不可动态变更 用来设置Innodb打开和同步数据文件及日志文件的方式，不过只在Linux & Unix系统上面有效。系统默认值为fdatasync，即Innodb默认通过fsync()来flush数据和日志文件数据。 此外，还可以设置为O_DSYNC和O_DIRECT，当我们设置为O_DSYNC，则系统以O_SYNC方式打开和刷新日志文件，通过fsync()来打开和刷新数据文件。而设置为O_DIRECT的时候，则通过O_DIRECT（Solaris上为directio()）打开数据文件，同时以fsync()来刷新数据和日志文件。 总的来说，innodb_flush_method的不同设置主要影响的是Innodb在不同运行平台下进行IO操作时调用的操作系统IO接口。不同的IO操作接口对数据的处理方式会有一定的区别，所以处理性能也会有一定的差异。一般来说，如果磁盘是通过RAID卡做了硬件级别的RAID，建议使用O_DIRECT，可以一定程度上提高IO性能，但如果RAID Cache不够的话，还是须要谨慎对待。此外，根据MySQL官方手册上面的介绍，如果存储环境是SAN环境，使用O_DIRECT有可能反而会使性能降低。对于支持O_DSYNC的平台，也可以尝试设置为O_DSYNC方式看是否能对写IO性能有所帮助。 innodb_lock_wait_timeout global级别，不可动态变更 设置Innodb事务等待锁定资源的最长时间，当等待超过该时间长度时，Innodb会自动结束该事务并提示超时，默认为50秒。 innodb_locks_unsafe_for_binlog global级别，不可动态变更 控制Innodb中间隙锁的使用，默认为0，即允许使用间隙锁。 innodb_log_buffer_size global级别，不可动态变更 设置Innodb存放Log的缓冲区大小，默认1MB，4MB的设置满足大多数环境。 innodb_max_dirty_pages_pct global级别，可动态变更 设置Innodb Buffer Pool中允许脏数据（被修改后未被刷新回磁盘）占整个Buffer Pool中数据量的百分比，默认90。此参数对于事务量较大的数据库来说一定要进行调整，否则可能造成IO压力不稳定的情况。对于Buffer Pool比较大的MySQL环境也须要减小此参数设置，否则可能造成MySQL重启时间非常长，造成这些问题的原因都是dirty buffer量太大。 innodb_open_files global级别，不可动态变更 设置Innodb最多能够打开的“.ibd”文件数，最小为10，默认为300。 innodb_thread_concurrency global级别，可动态变更 这个参数主要控制Innodb内部的并发处理线程数量的最大值，系统内部会有相应的检测机制进行检测控制并发线程数量，Innodb建议设置为CPU个数与磁盘个数之和。但是这个参数一直是一个非常有争议的参数，而且还有一个非常著名的BUG（#15815）一直被认为与innodb_thread_concurrency参数所控制的内容相关。从该参数在系统中默认值的变化可以看出即使是Innodb开发人员也并不是很清楚到底该将innodb_thread_concurrency设置为多少。在MySQL 5.0.8之前，默认值为8，从MySQL 5.0.8开始到MySQL 5.0.18，默认值又被更改为20，在MySQL 5.0.19和MySQL 5.0.20两个版本中又默认设置为0。之后，从MySQL 5.0.21开始默认值再次被更改回8。 innodb_thread_concurrency参数的设置范围是0～1000，但是在MySQL 5.0.19之前的版本，只要该值超过20，Innodb就会认为不需要对并发线程数做任何限制，也就是说Innodb不会再进行并行线程的数目检查。同样，我们也可以通过设置为0来禁用并行线程检查，完全让Innodb自己根据实际需要创建并行线程，而且在不少场景下设置为0还是一个非常不错的选择，尤其是当系统写IO压力较大的时候。 innodb_thread_sleep_delay global级别，可动态变更 一个Innodb线程在等待加入Innodb队列之前每次sleep的时间长度，默认为10000，单位为微秒。 interactive_timeout session/global级别，可动态变更 MySQL Server端关闭一个非活动状态连接前等待的最长时间。 join_buffer_size session/global级别，可动态变更 当Join是ALL、index、rang或index_merge时使用的Buffer。实际上这种Join被称为Full Join。参与Join的每一个表都需要一个Join Buffer，所以在Join出现的时候，至少是两个，且此缓冲区是每个连接线程独享的。Join Buffer的设置在MySQL 5.1.23版本之前最大为4GB，但是从5.1.23版本开始，在除了Windows之外的64位平台上可以超出4GB的限制。系统默认是128KB。 keep_files_on_create（5.1.21起） session/global级别，可动态变更 如果设置为“ON”，创建MyISAM表时遇到同名“.MYI”或“.MYD”文件则返回错误提示，否则直接覆盖原有文件，默认为“OFF”，即直接覆盖。 key_buffer_size global级别，可动态变更 设置MyISAM表索引缓存空间的大小，此参数对MyISAM存储引擎性能影响很大。 key_cache_age_threshold global级别，可动态变更 设置Cache Block从Hot Area降到Warm Area的限制，控制Hot Area中的Cache Block何时该被降级到Warm Area中。设置范围100至4G，系统默认值为300。值越小，被降级的可能性越大。 key_cache_block_size global级别，可动态变更 设置Key Cache中每个Cache Block的大小，设置范围512至16384，默认1024，单位bytes，也就是1KB。 key_cache_division_limit global级别，可动态变更 同样是针对Key Buffer的Cache Block中Hot Area和Warm Area两个区域的设置。该参数指定Hot与Warm在整个Key Buffer中所占的比值。 large_files_support global级别，不可变更 此参数确认MySQL Server在编译的时候是否已经预设大文件支持的编译选项。 large_pages global级别，不可动态变更 此参数仅适用于Linux平台，设置是否支持大的page size，默认为不支持。 large_page_size global级别，不可动态变更 当支持large page的时候，设置large page的大小。 local_infile global级别，可动态变更 设置是否允许在执行“LOAD DATA INFILE”命令的时候使用客户端的文件，默认为“OFF”不允许。 locked_in_memory global级别，不可动态变更 是否将mysqld使用的所有内存lock到物理内存中而不使用虚拟内存（通过--memlock参数），默认为“OFF”。 log_output global级别，可动态变更 设置general log和slow log的输出方式，可设置为“TABLE”、“FILE”或“NONE”，默认为“FILE”。 TABLE：日志信息输出到mysql数据库下的相应表中（general_log和slow_log表）； FILE：日志输出信息以文本形式记录在相应的日志文件中； NONE：日志信息不输出。 注：可设置为“TABLE,FILE”共存。 log_queries_not_using_indexes（5.1.11起） global级别，可动态变更 设置是否在慢查询日志中记录未使用索引的Query。 log_slave_updates global级别，不可动态变更 设置Slave端是否将Replication过程中SQL线程所执行的Query记录到本地的二进制日志，实际上只有级联复制的时候才有必要设置为“ON”，默认为“OFF”。 log_slow_queries global级别，可动态变更 是否打开记录慢查询的功能，默认为“OFF”，当须要跟踪系统中运行较慢的Query的时候设置为“ON”。 log_warnings session/global级别，可动态变更 是否将warning信息记录到错误日志中，默认为打开此功能，可设置为1或0来开启或关闭。 long_query_time session/global级别，可动态变更 设置将一个Query判定为慢查询的时间长度依据，默认为1秒，从5.1.21版本开始，支持毫秒级别的设置。 low_priority_updates session/global级别，可动态变更 设置是否降低写请求的优先级别，可设置范围1和0（默认）。如果被设置为1，则所有的写请求将等待相关表上读请求及读锁完全结束再进行。 lower_case_file_system global级别，不可变更 显示数据目录所在的文件系统是否对文件名的大小写敏感，ON表示不敏感，OFF表示敏感。 lower_case_table_names global级别，不可动态变更 设置MySQL在创建表及表名比较的时候如何处理大小写问题，可设置为0、1和2。 0：按实际创建语句中的大小写创建表文件，在比较查找表的时候也区分大小写； 1：所有表文件全部使用小写创建，比较的时候忽略大小写； 2：按照实际创建语句中的大小写创建表文件，但比较的时候永远使用小写来比较。 max_allowed_packet session/global级别，可动态变更 在网络传输中，一次消息传输量的最大值。这个参数与net_buffer_length相对应，只不过是net buffer的最大值。当消息传输量大于net_buffer_length的设置时，MySQL会自动增大net buffer的大小，直到缓冲区大小达到max_allowed_packet所设置的值。系统默认值为1MB，最大值是1GB，必须设定为1024的倍数，单位为字节。 max_binlog_cache_size global级别，可动态变更 设置binlog cache在遇到无法存放下一个大事务所包含的SQL语句时，会自动扩张到此参数设置值。假设仍然不够，则该事务将会失败，并且返回错误信息如：Multi-statement transaction required more than 'max_binlog_cache_size' bytes of storage。可设置范围4KB至4GB，默认4GB。 max_binlog_size global级别，可动态变更 二进制日志文件的最大值，不过，当遇到多SQL语句组成的大事务时，可能会少量超出该参数设置范围，因为一个事务不能被分段存放在两个二进制日志中。设置范围4KB至1GB，默认1GB。 max_connect_errors global级别，可动态变更 设置每个host的连接请求异常中断的最大次数，当超过该次数，MySQL Server将禁止该host上的连接请求，直到MySQL Server重启或通过FLUSH HOSTS命令清空某host的相关信息。可设置范围1至4G，默认为10。 max_connections global级别，可动态变更 设置MySQL Server允许的最大连接数量。该值在不同版本的MySQL中有不同的默认值和设置范围。 &lt;=5.1.14：默认为100； &gt;=5.1.15：可设置范围1至16384，默认为151； &gt;=5.1.17：可设置范围1至100000，默认151。 max_delayed_threads(同max_insert_delayed_threads) session/global级别，可动态变更 设置MySQL处理INSERT DELAYED操作时的最大线程数。如果所有INSERT DELAYED线程已经在使用，你想在新表中插入数据，MySQL会忽略DELAYED属性。如果将该值设置为0，MySQL不会创建线程来处理DELAYED行；其结果是完全禁用了DELAYED。设置范围0至16 384，默认20。 max_error_count session/global级别，可动态变更 MySQL保存的用于SHOW ERRORS或SHOW WARNINGS显示的错误、警告和注解的最大数目。设置范围0至65 535，默认为64。 max_heap_table_size session/global级别，可动态变更 设置MySQL内存表（Memory Table）的最大值，可设置范围16KB至4GB，默认16MB。 max_join_size session/global级别，可动态变更 设置MySQL Join语句中参与Join语句的最大行数，或者是最大磁盘查询次数。当某个Join语句超过该限制，MySQL会自动拒绝执行该语句。可设置范围为1至4GB，默认为4GB。 max_length_for_sort_data session/global级别，可动态变更 此参数决定了MySQL排序算法的选择，设置排序之前读取字段长度总和的最大限制。当须要返回字段的最大长度小于这个参数值的时候，MySQL就会通过存储引擎一次将所需字段全部取回，然后排序后再返回。但假如须要返回的字段超过此参数值，MySQL在排序的时候将仅仅取出须要排序的字段和可以直接定位数据记录的行指针信息，排好序之后返回重新取出所需的其他字段再返回。此参数值的大小将直接决定排序的Query的性能。设置范围4Bytes至8MB，默认1KB。 max_prepared_stmt_count global级别，可动态变更 设置MySQL所允许的最大Prepared Statement的数量可设置范围是0至1048576，默认为16382。 max_relay_log_size global级别，可动态变更 类似于max_binlog_size，设置Relay Log大小的最大值。设置为0则代表使用和max_binlog_size一样的值。可设置范围0至1GB，默认为0。 max_seeks_for_key session/global级别，可动态变更 影响优化器的参数，当MySQL优化器认为在使用索引扫描时，若根据索引键扫描表的次数大于此参数值，则会放弃索引而使用全表扫描。设置范围为4至8388608，默认1024。 max_sort_length session/global级别，可动态变更 设置当排序BLOB或TEXT值时使用的字节数。 max_sp_recursion_depth（5.1起） session/global级别，可动态变更 设置MySQL存储过程递归调用的层次深度，默认为0（不允许递归调用），最大值为255。 max_tmp_tables session/global级别，可动态变更 一个客户端连接可同时打开的最大临时表数量。可设置范围为1至4GB，默认为32。 max_user_connections session/global级别，可动态变更 设置同一个用户允许的最大连接数，设置为0则代表不限制。 min_examined_row_limit session/global级别，可动态变更 设置记入slow log的Query的最小访问记录数，当某个Query访问的记录数小于此参数设置时，将不会被记录进入slow log，即使执行时间满足slow log的要求。 myisam_block_size global级别，不可变更 MyISAM表索引的Block大小。可设置范围1204至16384，默认1024。 myisam_max_sort_file_size global级别，不可动态变更 重建MyISAM索引（在REPAIR TABLE、ALTER TABLE或LOAD DATA INFILE过程中）时，允许MySQL使用的临时文件的最大空间大小。如果文件的大小超过该值，则使用键值缓存创建索引，默认为2GB。 myisam_sort_buffer_size session/global级别，可动态变更 设置在REPAIR TABLE，或者用CREATE INDEX创建索引或ALTER TABLE的过程中排序索引所分配的缓冲区大小。可设置范围4Bytes至4GB，默认为8MB。 myisam_stats_method session/global级别，可动态变更 myisam_stats_method参数的作用就是告诉MyISAM在收集统计信息的时候，是认为所有NULL值都是等同，还是认为每个NULL值是完全不相等的值，可设置值为nulls_unequal和nulls_equal。 nulls_unequal：MyISAM在搜集统计信息的时候会认为每个NULL值都不同，基于该字段的索引的Cardinality会更大，也就是说MyISAM会认为DISTINCT值数量更多，这样就会让查询优化器处理Query的时候使用该索引的倾向性更高。 nulls_equal：MyISAM搜集统计信息的时候则会认为每个NULL值都是一样的，这样Cardinality数值会降低，优化器选择执行计划的时候放弃该索引的倾向性会更高。 net_buffer_length session/global级别，可动态变更 控制网络缓冲区初始化大小，最大可扩展至max_allowed_packet参数大小。可设置范围为1024至1048576，默认16384。 old_passwords session/global级别，可动态变更 设置是否使用MySQL 4.1之前的密码加密算法来进行密码验证。 open_files_limit global级别，不可动态变更 设置MySQL可打开的文件数总量，在OS级别也有相关设置会影响到最终结果。可设置范围为0至65 535，默认为0，即为使用和OS级别相同的限制。 optimizer_prune_level session/global级别，可动态变更 设置优化器选择的规则，是否允许优化器跳过某些方案。可设置为“ON”（1）和“OFF”（0），默认为“ON”。 ON：告诉优化器根据对每个表访问行数的估计跳过某些执行计划。这样可以大大降低查询编辑次数，并且按照MySQL的测试，这样的设置基本不会错过最佳的执行方案； OFF：如果认为这样的设置导致优化器错过了一个更好的执行计划，希望对所有的方案进行评估，则可设置为“OFF”。 optimizer_search_depth session/global级别，可动态变更 控制优化器在评估执行计划的时候所分析的层次深度，默认为62。如果这个值设置过大，则复杂查询会花很长的时间产生执行方案，如果设置过小，则可能导致产生的执行方案不够优化。如果不能确定合理的optimizer_search_depth值，该参数可以设置为0，告诉优化器自动确定该值。当然，最好是不要轻易更改该参数。 preload_buffer_size session/global级别，可动态变更 设置预加载索引时候缓冲区的大小。 profiling session级别，可动态变更 是否打开Profiling功能来监控Query执行过程中的prifile信息。 profiling_history_size session级别，可动态变更 设置存放profile信息的最大数量，默认为15，最大为100。 query_cache_limit global级别，可动态变更 设置Query Cache中可以接受的最大结果集，超出参数设置范围的结果集将不会被缓存，最小为0，默认为1MB。 query_cache_min_res_unit global级别，可动态变更 设置Query Cache中用于存放结果集的最小块的值。最小可设置为512Bytes，默认为4KB。 query_cache_size global级别，可动态变更 设置MySQL的Query Cache大小。默认为0，即关闭查询缓存功能。 query_cache_type session/global级别，可动态变更 设置使用查询缓存的类型，可设置为0、1或2。 0：关闭查询缓存功能； 1：缓存除了通过SQL_NO_CACHE明确提示不缓存之外的所有Query； 2：仅仅缓存通过SQL_CACHE明确提示须要缓存的Query。 query_cache_wlock_invalidate session/global级别，可动态变更 设置查询缓存出否被表的写锁定影响，若设置为TRUE，则表有写锁定的时候会造成从Query Cache中读取数据的查询也会被阻塞。如果设置为FALSE，在不会阻塞从Query Cache中读取数据的Query。 read_buffer_size session/global级别，可动态变更 设置以顺序扫描的方式扫描表数据时候使用缓冲区的大小。每个线程进行顺序扫描的时候都会产生该Buffer，而且同一个Query中如果有多个表进行全表扫描，会生成多个该Buffer。所以在设置的时候尽量不要太高，避免因为并发太大造成内存不够。系统默认为128KB，最大为2GB，设置的值必须是4KB的倍数，否则系统会自动更改成小于设置值的最大值（4KB）的倍数。 一般来说，可以尝试适当调大此参数看是否能够改善全表扫描的性能。在不同的平台上可能会有不同的表现，这主要与OS级别的文件系统IO大小有关。所以该参数的设置最好是在真实环境上面通过多次更改测试调整，才能选找到一个最佳值。 read_rnd_buffer_size session/global级别，可动态变更 read_rnd_buffer_size设置进行随机读的时候所使用的缓冲区。此参数和read_buffer_size所设置的Buffer相反，一个是顺序读的时候使用，一个是随机读的时候使用。但是两者都是针对于线程的设置，每个线程都可能产生两种Buffer中的任何一个。read_rnd_buffer_size的默认值256KB，最大值为4GB。 relay_log_purge global级别，可动态变更 是否自动清除不再需要的Relay Log。 relay_log_space_limit global级别，不可动态变更 设置Relay Log占用的最大空间量，默认为0，即不限制。 secure_auth global级别，可动态变更 设置是否启用阻止所有使用旧密码加密方式的连接请求，可设置为“ON”或者“OFF”。 secure_file_priv global级别，不可动态变更 设置LOAD DATA INFILE和SELECT...INFILE命令所使用的文件的目录。如果此参数不为空，则仅仅可以使用设置目录下的文件，默认为空。 skip_external_locking global级别，不可动态变更 设置MySQL是否忽略外部锁定，仅有多个Instance使用相同的数据文件及通过myisamchk客户端工具校验MyISAM表文件时，须要外部锁定，正常情况下建议使用此参数选项启动MySQL。 skip_networking global级别，不可动态变更 设置此MySQL是否不监听网络访问，只允许本地访问。当和MySQL仅处理同一台主机上的请求时，建议启动MySQL的时候使用此参数选项。 skip_show_database global级别，不可动态变更 防止不具有SHOW DATABASES权限的人使用SHOW DATABASES语句。如果担心用户能够看见属于其他用户的数据库，这样设置可以提高安全性。 ON：只允许具有SHOW DATABASES权限的人使用SHOW DATABASES语句，并且该语句将显示所有数据库名。 OFF：允许所有用户执行SHOW DATABASES，但只显示用户具有SHOW DATABASES或其他权限的数据库的名称。 slow_query_log_file（5.1.12） global级别，不可动态变更 设置当以文件形式记录Slow Query Log的时候所使用的日志文件名。默认为hostname-slow.log sort_buffer_size session/global级别，可动态变更 系统中对数据进行排序的时候使用的Buffer。 Sort Buffer是针对单个线程的，所以当多个线程同时进行排序的时候，系统中就会出现多个Sort Buffer。一般可以通过增大Sort Buffer来提高ORDER BY或是GROUP BY的处理性能。系统默认大小为2MB，最大限制和Join Buffer一样，在MySQL 5.1.23版本之前最大为4GB，从5.1.23版本开始，在除了Windows之外的64位平台上可以超出4GB的限制。 sql_log_bin session级别，可动态设置 设置是否将自己的操作记入二进制日志。仅仅有Super权限的用户才能动态设置。当设置为0的时候，所有变更操作不会被记录进入二进制日志，在某些特殊的维护场景下非常有用。 sql_log_off session级别，可动态设置 设置是否将自己的操作记录进入General Log。 sql_mode session/global级别，可动态变更 设置MySQL Server的SQL操作模式，MySQL支持的SQL Mode有三十多种，每一种Mode针对于不同的方面，所以可以同时设置多种SQL Mode。可设置为：ALLOW_INVALID_DATES、ANSI_ QUOTES、ERROR_FOR_DIVISION_BY_ZERO、HIGH_NOT_PRECEDENCE、IGNORE_SPACE、NO_AUTO_CREATE_USER、NO_AUTO_VALUE_ON_ZERO、NO_BACKSLASH_ESCAPES、NO_DIR_IN_CREATE、NO_ENGINE_SUBSTITUTION、NO_FIELD_OPTIONS、NO_KEY_ OPTIONS、NO_TABLE_OPTIONS、NO_UNSIGNED_SUBTRACTION、NO_ZERO_DATE、NO_ ZERO_IN_DATE、ONLY_FULL_GROUP_BY、PAD_CHAR_TO_FULL_LENGTH、PIPES_AS_ CONCAT、REAL_AS_FLOAT、STRICT_ALL_TABLES、STRICT_TRANS_TABLES。 sql_select_limit session/global级别，可动态变更 设置MySQL一条Query语句允许返回的最大记录数，此参数设置不影响存储过程中的Query。 sql_slave_skip_counter global级别，可动态变更 在Replication环境中，Slave端通过设置此参数来跳过某些Query不被复制，一般用于Slave端SQL进程遇到错误，无法继续复制下去时使用。 storage_engine(table_type) session/global级别，可动态变更 设置默认存储引擎。 sync_binlog global级别，可动态变更 设置二进制日志从binlog_buffer中刷新到磁盘的频率。对MySQL系统来说，它是一个至关重要的参数，不仅影响到Binlog对MySQL带来的性能损耗，而且还影响到MySQL中数据的完整性。设置说明如下。 0：在事务提交之后，MySQL不做fsync之类的磁盘同步指令通知文件系统将Binlog文件的缓存同步到磁盘，而让Filesystem自行决定什么时候来做同步； n：在每进行n次事务提交之后，MySQL将进行一次fsync之类的磁盘同步指令，通知文件系统将Binlog文件的缓存同步到磁盘。 在MySQL中系统默认的设置是sync_binlog=0，也就是不做任何强制性的磁盘刷新指令，这时候的性能是最好的，但是风险也是最大的。因为一旦系统Crash，在文件系统缓存中的所有binlog信息都会被丢失。“1”是最安全但也是性能损耗最大的设置。因为当设置为1的时候，即使系统Crash，最多丢失binlog_cache中未完成的一个事务，对实际数据没有任何实质性影响。从以往经验和相关测试来看，对于高并发事务的系统来说，“sync_binlog”设置为0和设置为1的系统写入性能差距可能高达5倍甚至更多。 sync_frm global级别，可动态变更 设置当创建非临时表时，是否在完成操作的同时进行磁盘刷新操作，保证数据写入到磁盘持久化，默认为“TRUE”。 table_definition_cache(5.1.3) global级别，可动态变更 设置MySQL中Cache表定义信息的最大数量，当一个MySQL Server中的表比较多的时候，可以适当增加此参数的值，可设置的最大值524288，在5.1.25版本之前默认值为1，之后默认值为256。 table_open_cache(5.1.3起) global级别，可动态变更 设置MySQL中Cache打开的表的最大数量，增大table_cache，可以提升打开表的速度。 thread_cache_size global级别，可动态变更 设置Thread Cache池中可以缓存的连接线程最大数量。可设置为0至16384，默认为0。 当系统最初启动的时候，并不会马上就创建thread_cache_size所设置数目的连接线程存放在Thread Cache池中，而是随着连接线程的创建及使用，慢慢地将用完的连接线程存入其中。当存放的连接线程达到thread_cache_size值时，MySQL就不会再续保存用完的连接线程了。 如果应用程序使用的短连接，Thread Cache池的功效是最明显的。因为在短连接的数据库应用中，数据库连接的创建和销毁是非常频繁的，如果每次都须要让MySQL新建和销毁相应的连接线程，那么这个资源消耗实际上是非常大的，而在使用了Thread Cache之后，由于连接线程大部分都是在创建好了等待取用的状态，既不须要每次都重新创建，又不须要在使用完之后销毁，可以节省下大量的系统资源。在短连接的应用系统中，thread_cache_size的值应该设置的相对大一些，不应该小于应用系统对数据库的实际并发请求数。 thread_concurrency global级别，不可动态变更 此参数仅在Solaris系统环境下有效，mysqld用该值调用thr_setconcurrency()。该函数使应用程序向线程系统提供须要同时运行的期望线程数目的指示。 thread_stack global级别，不可动态变更 设置MySQL每个线程的堆栈大小。默认值足够大，可满足普通操作。可设置范围128KB至4GB，默认192KB。 tmp_table_size（5.1.12起） session/global级别，可动态变更 设置内存内临时表最大值。如果超该该值，则会将临时表写入到磁盘。设置范围1KB至4GB， tmpdir global级别，不可动态变更 设置临时文件存放目录，在Linux/Unix平台默认为“/tmp”，建议指定一个可以存放较大文件的目录。如果内存足够，也可以使用内存文件系统来存放，不过须要防止出现内存不够的情况。 tx_isolation session/global级别，可动态变更 设置MySQL使用的事务隔离级别，可设置为以下4种级别：READ-UNCOMMITTED、READ-COMMITTED、REPEATABLE-READ、SERIALIZABLE。 默认为：REPEATABLE-READ
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 5343-5688
+
+
+附录C　MySQL部分状态说明 Aborted_clients session/global级别（单位：次） 记录客户端连接未正常关闭连接（mysql_close()），或者是空闲时间超长（interactive_timeout, wait_timeout），以及数据传输过程中突然中断的次数。 Aborted_connects global级别（单位：次） 记录客户端进行非法未授权连接，密码异常，连接信息不正确或是连接超长（connection_ timeout）的总次数。 Binlog_cache_disk_use session/global级别（单位：个） 使用二进制日志缓存超过binlog_cache_size值，被迫使用临时文件来保存事务中的语句的事务数量。 Binlog_cache_use session/global级别（单位：个） 在二进制日志中已经经历过多少次事务的binlog缓存。 Byte_received session/global级别（单位：Byte） MySQL Server接收到的请求数据量。 Byte_sent session/global级别（单位：Byte） MySQL Server发送出去的数据量。 Com_xxx session/global级别（单位：次） Com_xxx系列计数器主要记录自MySQL Server启动以来，“xxx”操作的执行总次数。通过状态名称可以看出针对每一种Query类型都存在一个状态变量来作为其执行次数的计数器。如com_kill就记录了进行kill操作的总次数。 Com_stmt_xxx session/global级别（单位：次） 与COM_xxx系列状态类似。当我们使用Prepare Statement方式，调用如mysql_stmt_prepare()、mysql_stmt_execute()的时候，相应的值就会增加。此外，当我们执行PREPARE、EXECUTE或DEALLOCATE PREPARE命令的时候，Com_stmt_prepare、Com_stmt_execute和Com_stmt_close计数器也会增加。Com_prepare_sql、Com_execute_sql和Com_dealloc_sql的值也会随着PREPARE、EXECUTE和DEALLOCATE PREPARE的执行而增加。Com_stmt_fetch表示通过游标获取的网络round-trips的总数量。 注：所有的计数器在命令请求的时候就会增加，而不会在乎是否执行成功。 Connections session/global级别（单位：次） MySQL Server接收到的连接请求总数量（包括成功连接和不成功连接）。 Created_tmp_files session/global级别（单位：个） MySQL Server创建的临时文件的数量。 Created_tmp_disk_tables session/global级别（单位：个） 在使用临时表时，当大小超出tmp_table_size（或者最大内存表大小），会将临时表数据写到磁盘上。此状态变量即是记录在磁盘上创建的临时表的总数量。 Created_tmp_tables session/global级别（单位：个） 和Created_tmp_disk_tables相对应，记录在内存中创建的临时表总数量。 Delayed_errors session/global级别（单位：行） 在使用INSERT DELAYED命令插入数据时遇到错误的总行数。 Delayed_insert_threads session/global级别（单位：个） 在使用INSERT DELAYED命令插入数据共使用到了多少个线程。 Delayed_writes session/global级别（单位：个） 通过INSERT DELAYED命令已经成功插入的记录条数。 Handler_commit session/global级别（单位：次） MySQL内部COMMIT的次数，如autocommit=1的时候，就会产生内部COMMIT。 Handler_read_first session/global级别（单位：次） 此状态表示索引键的第一个键被读取的次数。一般来说，主要发生在全索引扫描和刚好遇到根据该索引查询某个索引最小键值所对应的记录。 Handler_read_key session/global级别（单位：次） 根据索引读取一条记录的次数。 Handler_read_next session/global级别（单位：次） 根据索引依序读取下一个索引键的次数，如索引范围扫描，全索引扫描等。 Handler_read_prev session/global级别（单位：次） 根据索引倒序依序读取索引键的次数，如ORDER BY ... DESC的时候。 Handler_read_rnd session/global级别（单位：次） 根据固定位置直接定位一行记录的次数，有点类似Oracle中的db file sequencial read，过度非正确使用索引可能导致此状态值特别高。另外一种可能就是max_length_for_sort_data参数设置过小，导致排序算法中不得不进行二次取数才能完成须要进行排序的Query。 Handler_read_rnd_next session/global级别（单位：次） 记录读取一行记录后接着读取紧挨着的下一条记录的次数，主要发生在全表扫描之类的操作。有点类似于Oracle中的db file scattered read。 Handler_rollback session/global级别（单位：次） 记录内部ROLLBACK的次数。 Innodb_buffer_pool_pages_data global级别（单位：page） Innodb Buffer Pool缓存池中包含数据的页的数目，包括Dirty Page。 Innodb_buffer_pool_pages_dirty global级别（单位：page） Innodb Buffer Pool缓存池中Dirty Page的总数目。 Innodb_buffer_pool_pages_flushed global级别（单位：page） Innodb Buffer Pool缓存池中遇到page-flush请求的Page数目。 Innodb_buffer_pool_pages_free global级别（单位：page） Innodb Buffer Pool中空余的不存在任何数据的Page数目。 Innodb_buffer_pool_pages_latched global级别（单位：page） Innodb Buffer Pool中当前正在读/写而被锁住不能被清空或同步到磁盘的Page数目。 Innodb_buffer_pool_pages_misc global级别（单位：page） Innodb Buffer Pool缓存池中当前已经被用作特殊的管理用途或Hash Index而不能被用做普通数据页的Page数目。 Innodb_buffer_pool_pages_total global级别（单位：page） Innodb Buffer Pool的总Page数目，可以通过以下两种方式计算出来： Innodb_buffer_pool_pages_[misc+free+data] Innodb_Buffer_pool_size/Innodb_page_size Innodb_buffer_pool_read_ahead_rnd global级别（单位：次） Innodb存储引擎随机扫面表数据文件的次数，一般为索引扫描。 Innodb_buffer_pool_read_ahead_seq global级别（单位：次） Innodb存储引擎顺序扫描表数据文件的次数，一般为全表扫描。 Innodb_buffer_pool_read_requests global级别（单位：次） Innodb存储引擎进行逻辑读（logical reads）的数量。 Innodb_buffer_pool_reads global级别（单位：次） Innodb存储引擎在Buffer Pool缓存池中找不到所需数据页的时候，不得不进行单页物理读（signle-page physical reads）的数量。 Innodb_buffer_pool_wait_free global级别（单位：次） Innodb的IO线程从数据文件中读取了数据要写入Buffer Pool的时候，需要等待Free Page的次数。 Innodb_buffer_pool_write_requests global级别（单位：次） Innodb完成写入Buffer Pool的请求次数。 Innodb_data_fsyncs global级别（单位：次） Innodb进行fsync()操作的次数。 Innodb_data_pending_fsyncs global级别（单位：次） Innodb当前处于Pending状态的fsyng()数目。 Innodb_data_pending_reads global级别（单位：次） Innodb当前处于pending状态的读数量。 Innodb_data_pending_writes global级别（单位：次） Innodb当前处于pending状态的写数量。 Innodb_dblwr_pages_written global级别（单位：page） Innodb已经完成的Doublewrite的总page数。 Innodb_dblwr_writes global级别（单位：page） Innodb已经完成的Doublewrite总次数。 Innodb_log_waits global级别（单位：次） Innodb等待Log Buffer空余空间的总次数。 Innodb_log_write_requests global级别（单位：次） Innodb请求写Log的总次数。 Innodb_log_writes global级别（单位：次） Innodb Log Buffer写入Log File（physical writes）的总次数。 Innodb_os_log_fsyncs global级别（单位：次） Innodb Log Buffer进行fsync()总次数。 Innodb_os_log_pending_fsyncs global级别（单位：次） Innodb当前处于pending状态的fsync()数目。 Innodb_os_log_pending_writes global级别（单位：次） Innodb当前处于pending状态的写Log File的数目。 Innodb_os_log_written global级别（单位：Byte） Innodb写入日志文件的的总数据量。 Innodb_page_size global级别（单位：Byte） Innodb文件每个Page的大小。 Innodb_pages_created global级别（单位：page） Innodb总共的Page数量。 Innodb_pages_read global级别（单位：page） Innodb总共读取的Page数量。 Innodb_pages_written global级别（单位：page） Innodb总共写入的Page数量。 Innodb_row_lock_current_waits global级别（单位：个） Innodb当前等待需要行锁定资源的个数。 Innodb_row_lock_time global级别（单位：毫秒） Innodb获取行锁的总消耗时间。 Innodb_row_lock_time_avg global级别（单位：毫秒） Innodb获取行锁等待的平均时间。 Innodb_row_lock_time_max global级别（单位：毫秒） Innodb获取行锁过程中最大等待时间。 Innodb_row_lock_waits global级别（单位：次） Innodb获取行锁需要等待而不能直接获取的总次数。 Key_blocks_not_flushed session/global级别（单位：Block） Key Buffer中已经更改但是还没有Flush到磁盘的Block数量。其实就是Dirty Buffer。 Key_blocks_unused session/global级别（单位：Block） Key Buffer中还没有使用的空余Block数量。 Key_blocks_used session/global级别（单位：Block） Key Buffer中已经使用的Block数量。 Key_read_requests session/global级别（单位：Block） 从Key Buffer中读取Block的请求次数，可以理解为MyISAM存储引擎的索引的逻辑读数量。 Key_reads session/global级别（单位：Block） 在Key Buffer中请求读取Block但是未命中，然后到磁盘上读取的次数，可以理解为MyISAM存储引擎索引的物理读数量。 Key_write_requests session/global级别（单位：Block） 向Key Buffer写入的请求数量。 Key_writes session/global级别（单位：Block） 将Key Buffer中的Block写入磁盘的Block数量。 Last_query_cost session/global级别 MySQL Optimizer（查询优化器）计算出的最有一条Query的执行总成本，并不是实际执行的成本，可在Query Tuning的时候进行相应的分析。如果最后一条是Explain命令，那么显示的是被Explain的那条Query。 Max_used_connections global级别（单位：个） MySQL Server运行过程中的的最大连接数。 Not_flushed_delayed_rows session/global级别（单位：Row） 进行INSERT DELAYED操作后，在Delayed队列中暂时还没有被写入磁盘的记录数量。 Open_files global级别（单位：个） 当前处于打开状态的总文件数，如果同一个文件打开多个文件句柄，那么会被记录多次。 Open_streams session/global级别（单位：个） 当前打开的streams的数目，主要用于日志记录。 Open_table_definitions（5.1.3起） session/global级别（单位：个） 当前处于打开状态的表定义文件（.frm）总数目。 Open_tables session/global级别（单位：个） 当前处于打开状态的表数目，同一个表被多个线程打开会被记录多次。 Opened_files session/global级别（单位：个） MySQL Server开始运行以来打开的总文件数。 Opened_table_definitions session/global级别（单位：个） MySQL Server自开始运行以来打开的总的表定义文件数目。 Opened_tables session/global级别（单位：个） MySQL Server开始运行以来打开的表的总数目。 Prepared_stmt_count（5.1.14起） global级别（单位：个） 当前MySQL Server中总的Prepare Statement数目。 Qcache_free_blocks session/global级别（单位：Block） Query Cache中空闲的Block数目。 Qcache_free_memory session/global级别（单位：Bytes） Query Cache空闲内存量。 Qcache_hits session/global级别（单位：次） Query Cache命中的次数。 Qcache_inserts session/global级别（单位：次） Query没有在Query Cache中命中，取回数据后插入查询缓存中的次数。 查询缓存命中率： Qcache_hits/(Qcache_hits+Qcache_inserts) Qcache_lowmem_prunes session/global级别（单位：次） 由于Query Cache空余内存不够而不得不将某些Query删除出去的次数。 Qcache_not_cached session/global级别（单位：Query） Query Cache中没有Cache的Query数量，这些Query可能是被显式指定不要Cache，或者是因为某些特别的限制而不能被Cache。 Qcache_queries_in_cache session/global级别（单位：Query） 在Query Cache的Query总数量。 Qcache_total_blocks session/global级别（单位：Block） Query Cache的总Block数量，根据这个数量可以判断出Query Cache中碎片的量。因为在Query Cache中连续的空闲内存将被认为是一个Block。 Queries(5.1.31起) session/global级别（单位：次） MySQL Server自运行以来接收到的所有Query总请求次数，包括Procedure等内部执行的Query。 Questions session/global级别（单位：Block） MySQL Server自运行以来接收到的所有Query总请求次数，但不包括Procedure等执行的Query。 Select_full_join session/global级别（单位：次） 未使用到索引的Join次数，这种Join是非常危险的，如果此状态值不为0，你就应该注意系统，查找出是否正常。 Select_full_range_join session/globa <您已达到本内容的剪贴上限>
+简朝阳, MySQL性能调优与架构设计 (博文视点LAMP精品书廊), loc. 5688-5854
+
+
