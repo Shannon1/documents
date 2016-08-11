@@ -11,7 +11,7 @@ MYDATE=`date +%Y%m%d`
 mysqldump -u$mysql_user -p$mysql_password --all-databases --flush-logs --quick --events --flush-privileges --single-transaction --triggers --routines --hex-blob --master-data=2 --default-character-set=utf8 >/data/backup/dump_backup_$MYDATE.sql
 ```
 
-**注，如果在crontab执行这个脚本导出的文件是空的话，有可能是找不到mysqldump命令的位置，需要给出mysqldump的全路径，比如`/usr/local/mysql/bin/mysqldump` ** 
+** 注，如果在crontab执行这个脚本导出的文件是空的话，有可能是找不到mysqldump命令的位置，需要给出mysqldump的全路径，比如`/usr/local/mysql/bin/mysqldump` ** 
 
 ## 参数说明
 
