@@ -69,7 +69,7 @@ otter是一个复杂的项目，需要依赖的组件很多。
 
 ### 安装步骤
 
-1. 修改mysql配置参数
+1.修改mysql配置参数
 
 otter的数据来源本质上还是binlog，所以MySQL必须开启binlog
 
@@ -112,7 +112,7 @@ character-set-server=utf8
 ```
 
 
-2. 安装java
+2.安装java
 
 ```
 rpm -ivh jdk-8u74-linux-x64.rpm
@@ -127,7 +127,7 @@ export PATH=$PATH:$JAVA_HOME/bin
 #source /etc/profile
 
 ```
-3. 安装aria2
+3.安装aria2
 
 ```
 tar zxvf aria2-1.17.1.tar.gz
@@ -136,7 +136,7 @@ cd aria2-1.17.1
 make && make install
 ```
 
-4. 安装zookeeper集群
+4.安装zookeeper集群
 
 `server-id=1`
 
@@ -184,7 +184,7 @@ echo "3" > data/myid
 正常情况下有一个节点mode是leader，其他节点是follower。
 如果有异常，检查zoo.cfg中的ip，可以改成内网ip或0.0.0.0或主机名并修改hosts文件。或参考错误日志`/usr/local/zookeeper/zookeeper.out`中的内容来排查。
 
-5. 向mysql中导入需要的表
+5.向mysql中导入需要的表
 需要向mysql中导入两个sql文件
 `otter-manager-schema.sql`
 会创建数据库otter和若干表，用于维护和管理otter的数据，如数据源、pipeline、和一些统计信息等。
@@ -193,7 +193,7 @@ echo "3" > data/myid
 retl用户非常重要，他是同步数据的来源，并且有非常高的权限。
 如果重新安装otter删除了retl用户，一定要刷新权限(`flush privileges;`)，否则在导入`otter-manager-retl.sql`的时候会出现create user失败的错误，并且在同步的时候无法获取到全部的数据导致同步失败。（表现到日志里面可能会是`No database selected`）
 
-6. 安装manager
+6.安装manager
 
 manager是otter的管理端，提供web管理界面，多个节点的集群在一个节点上安装就可以
 
@@ -250,7 +250,7 @@ otter.manager.monitor.email.stmp.port = 465
 
 ```
 
-7. 安装node
+7.安装node
 
 接下来通过manager提供的web界面来操作
 
