@@ -177,4 +177,8 @@ private String prepareStmtBindValue(PreparedStatement pstmt, BindValue[] bindVal
 
 
 
-要么等Mycat下个版本更新，再测试对预处理的支持情况。要么自己用组字符串，进行类型检查（比如使用`boost::format`），组好SQL语句后发给后端执行。
+现在有几个选择：
+
+1.  等Mycat下个版本更新，再测试对预处理的支持情况。
+2.  自己用组字符串，进行类型检查（比如使用`boost::format`），组好SQL语句后发给后端执行。
+3.  在MaxScale技术上修改，加入对预处理语句的管理。
