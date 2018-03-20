@@ -1791,7 +1791,7 @@ masterha_check_ssh--conf=/etc/masterha/app1.cnf
 
 测试复制：
 
-````
+```
 masterha_check_repl--conf=/etc/masterha/app1.cnf
 ```
 
